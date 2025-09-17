@@ -1,0 +1,9 @@
+PyQt6
+fastapi
+scikit-learn
+numpy
+pandas
+PyJWT
+bcrypt
+psycopg2-binary
+uvicorn
