@@ -1,7 +1,20 @@
+import sys
+import os
+
+# Add project root to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.dirname(__file__))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from .routes import user_routes, habit_routes
+try:
+    from routes import user_routes, habit_routes
+except ImportError:
+    # Fallback for different import structures
+    from . import routes
+    user_routes = routes.user_routes
+    habit_routes = routes.habit_routes
 import uvicorn
 
 app = FastAPI(

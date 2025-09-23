@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from backend_api.models.user import UserCreate, UserResponse, UserLogin, UserUpdate
-from backend_api.utils.security import SecurityUtils
+from models.user import UserCreate, UserResponse, UserLogin, UserUpdate
+from utils.security import SecurityUtils
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 from app.database.local_db import get_db
 from app.models.user_model import User
 

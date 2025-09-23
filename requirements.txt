@@ -7,3 +7,6 @@ PyJWT
 bcrypt
 psycopg2-binary
 uvicorn
+sqlalchemy
+python-dotenv
+requests

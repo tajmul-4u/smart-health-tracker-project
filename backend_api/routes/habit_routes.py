@@ -1,11 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from ..models.habit import HabitCreate, HabitResponse, HabitUpdate
-from ..utils.security import SecurityUtils
-from ...app.database.local_db import get_db
-from ...app.models.habit_model import Habit
-from ...app.models.user_model import User
+from models.habit import HabitCreate, HabitResponse, HabitUpdate
+from utils.security import SecurityUtils
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
+from app.database.local_db import get_db
+from app.models.user_model import User
+from app.models.habit_model import Habit
 
 router = APIRouter()
 
