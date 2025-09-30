@@ -139,6 +139,117 @@ async def update_current_user(user_update: UserUpdate):
     
     return UserResponse(**user)
 
+# Health tracking endpoints
+@app.get("/api/health/stats")
+async def get_health_stats():
+    """Get quick health statistics"""
+    # Sample data - in real app, calculate from user's data
+    return {
+        "steps": 8450,
+        "sleep_hours": 7.5,
+        "water_intake": 2.1,
+        "mood_score": 8.2
+    }
+
+@app.get("/api/health/activities")
+async def get_recent_activities():
+    """Get recent health activities"""
+    # Sample data - in real app, fetch from database
+    return [
+        {"activity": "Walked 8,450 steps today", "time": "2 hours ago", "type": "exercise"},
+        {"activity": "Slept 7.5 hours last night", "time": "8 hours ago", "type": "sleep"},
+        {"activity": "Drank 2.1L water today", "time": "1 hour ago", "type": "hydration"},
+        {"activity": "Logged breakfast: Oatmeal with fruits", "time": "3 hours ago", "type": "nutrition"},
+        {"activity": "Took morning medication", "time": "4 hours ago", "type": "medication"},
+        {"activity": "Completed 10-minute meditation", "time": "1 day ago", "type": "wellness"},
+        {"activity": "Blood pressure recorded: 120/80", "time": "2 days ago", "type": "health_condition"}
+    ]
+
+@app.get("/api/notifications")
+async def get_notifications():
+    """Get user notifications"""
+    # Sample notifications
+    return [
+        {"type": "health_alert", "message": "Time for your evening medication", "time": "5 mins ago", "read": False},
+        {"type": "achievement", "message": "You've reached your daily step goal!", "time": "2 hours ago", "read": False},
+        {"type": "reminder", "message": "Don't forget to log your blood pressure", "time": "1 day ago", "read": True}
+    ]
+
+@app.post("/api/notifications/{notification_id}/read")
+async def mark_notification_read(notification_id: int):
+    """Mark a notification as read"""
+    return {"status": "success", "message": "Notification marked as read"}
+
+# Health conditions endpoints
+@app.get("/api/health/conditions")
+async def get_health_conditions():
+    """Get health conditions data"""
+    return {
+        "blood_pressure": [
+            {"date": "2025-09-30", "systolic": 120, "diastolic": 80},
+            {"date": "2025-09-29", "systolic": 118, "diastolic": 78},
+            {"date": "2025-09-28", "systolic": 122, "diastolic": 82}
+        ],
+        "blood_sugar": [
+            {"date": "2025-09-30", "level": 95, "meal_relation": "fasting"},
+            {"date": "2025-09-29", "level": 140, "meal_relation": "after_meal"},
+            {"date": "2025-09-28", "level": 88, "meal_relation": "fasting"}
+        ],
+        "stress_level": [
+            {"date": "2025-09-30", "level": 3, "notes": "Feeling relaxed"},
+            {"date": "2025-09-29", "level": 7, "notes": "Work deadline stress"},
+            {"date": "2025-09-28", "level": 4, "notes": "Normal day"}
+        ]
+    }
+
+@app.post("/api/health/conditions/blood_pressure")
+async def log_blood_pressure(data: dict):
+    """Log blood pressure reading"""
+    # In real app, save to database
+    return {"status": "success", "message": "Blood pressure logged successfully"}
+
+@app.post("/api/health/conditions/blood_sugar")
+async def log_blood_sugar(data: dict):
+    """Log blood sugar reading"""
+    # In real app, save to database
+    return {"status": "success", "message": "Blood sugar logged successfully"}
+
+@app.post("/api/health/conditions/stress")
+async def log_stress_level(data: dict):
+    """Log stress level"""
+    # In real app, save to database
+    return {"status": "success", "message": "Stress level logged successfully"}
+
+# Analytics endpoints
+@app.get("/api/analytics/trends")
+async def get_health_trends():
+    """Get health trends for analytics"""
+    return {
+        "weight_trend": [70.2, 70.0, 69.8, 69.9, 70.1],
+        "sleep_trend": [7.5, 8.0, 7.2, 6.8, 7.5],
+        "steps_trend": [8450, 9200, 7800, 8900, 8450],
+        "mood_trend": [8.2, 7.8, 8.5, 7.9, 8.2]
+    }
+
+# Community endpoints
+@app.get("/api/community/insights")
+async def get_community_insights():
+    """Get community health insights"""
+    return {
+        "average_steps": 7500,
+        "average_sleep": 7.2,
+        "user_ranking": {
+            "steps": 85,  # percentile
+            "sleep": 78,
+            "consistency": 92
+        },
+        "challenges": [
+            {"name": "10K Steps Challenge", "participants": 1250, "user_joined": True},
+            {"name": "Sleep Better Challenge", "participants": 890, "user_joined": False},
+            {"name": "Mindful Minutes", "participants": 650, "user_joined": True}
+        ]
+    }
+
 if __name__ == "__main__":
     print("Starting Smart Health Tracker Backend API...")
     print("Backend available at: http://localhost:8000")

@@ -1,8 +1,18 @@
 
+import sys
+import os
+
+# Add project root to path
+project_root = os.path.join(os.path.dirname(__file__), '../..')
+sys.path.insert(0, project_root)
+
 from PyQt6.QtWidgets import QMainWindow, QMessageBox, QInputDialog, QLineEdit
 from PyQt6.uic.load_ui import loadUiType
-from app.services.api_client import APIClient
-import os
+
+try:
+    from app.services.api_client import APIClient
+except ImportError:
+    from services.api_client import APIClient
 
 Ui_LoginWindow, _ = loadUiType(os.path.join(os.path.dirname(__file__), '../ui/login_window.ui'))
 

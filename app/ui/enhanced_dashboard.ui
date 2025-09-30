@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EnhancedDashboard</class>
+ <widget class="QMainWindow" name="EnhancedDashboard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Smart Health Tracker - Dashboard</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QMainWindow {
+    background-color: #f5f5f5;
+}
+
+/* Left Navigation Menu */
+#leftNavWidget {
+    background-color: #2c3e50;
+    border: none;
+}
+
+QPushButton#navButton {
+    color: white;
+    background-color: transparent;
+    border: none;
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton#navButton:hover {
+    background-color: #34495e;
+}
+
+QPushButton#navButton:pressed {
+    background-color: #3498db;
+}
+
+/* Top Navigation Bar */
+#topNavWidget {
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Profile Section */
+#profileSection {
+    background-color: white;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+/* Content Area */
+#contentArea {
+    background-color: white;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+/* Notification Bell */
+#notificationButton {
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    color: #7f8c8d;
+}
+
+#notificationButton:hover {
+    color: #3498db;
+}
+   </string>
+  </property>
+  
+  <!-- Top Navigation Bar -->
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout" stretch="0,1">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    
+    <!-- Top Navigation Bar -->
+    <item>
+     <widget class="QWidget" name="topNavWidget">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>60</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="topNavLayout">
+       <item>
+        <widget class="QLabel" name="appTitleLabel">
+         <property name="text">
+          <string>Smart Health Tracker</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-size: 18px; font-weight: bold; color: #2c3e50;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="topNavSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       
+       <!-- Notifications -->
+       <item>
+        <widget class="QPushButton" name="notificationButton">
+         <property name="text">
+          <string>🔔</string>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       
+       <!-- Profile Dropdown -->
+       <item>
+        <widget class="QWidget" name="profileSection">
+         <layout class="QHBoxLayout" name="profileLayout">
+          <item>
+           <widget class="QLabel" name="userAvatarLabel">
+            <property name="text">
+             <string>👤</string>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>30</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-size: 20px;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="userNameLabel">
+            <property name="text">
+             <string>John Doe</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font-weight: bold; color: #2c3e50;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="profileDropdownButton">
+            <property name="text">
+             <string>▼</string>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border: none; background: transparent;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    
+    <!-- Main Content Area -->
+    <item>
+     <widget class="QWidget" name="mainContentWidget">
+      <layout class="QHBoxLayout" name="mainContentLayout" stretch="0,1">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       
+       <!-- Left Navigation Menu -->
+       <item>
+        <widget class="QWidget" name="leftNavWidget">
+         <property name="minimumSize">
+          <size>
+           <width>250</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>250</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <layout class="QVBoxLayout" name="leftNavLayout">
+          <property name="spacing">
+           <number>5</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>20</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          
+          <item>
+           <widget class="QPushButton" name="dashboardNavButton">
+            <property name="text">
+             <string>📊 Dashboard</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="habitsNavButton">
+            <property name="text">
+             <string>💪 Habits</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="healthConditionsNavButton">
+            <property name="text">
+             <string>❤️ Health Conditions</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="analyticsNavButton">
+            <property name="text">
+             <string>📈 Analytics</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="aiPredictionsNavButton">
+            <property name="text">
+             <string>🤖 AI Predictions</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="communityNavButton">
+            <property name="text">
+             <string>👥 Community Insights</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="settingsNavButton">
+            <property name="text">
+             <string>⚙️ Settings</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+           </widget>
+          </item>
+          
+          <item>
+           <spacer name="leftNavSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          
+          <item>
+           <widget class="QPushButton" name="logoutNavButton">
+            <property name="text">
+             <string>🚪 Logout</string>
+            </property>
+            <property name="objectName">
+             <string>navButton</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #e74c3c;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       
+       <!-- Content Area -->
+       <item>
+        <widget class="QStackedWidget" name="contentStackedWidget">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         
+         <!-- Dashboard Page -->
+         <widget class="QWidget" name="dashboardPage">
+          <layout class="QVBoxLayout" name="dashboardLayout">
+           <item>
+            <widget class="QLabel" name="pageTitle">
+             <property name="text">
+              <string>Dashboard Overview</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           
+           <!-- Quick Stats -->
+           <item>
+            <widget class="QWidget" name="quickStatsWidget">
+             <layout class="QHBoxLayout" name="quickStatsLayout">
+              <item>
+               <widget class="QWidget" name="statCard1">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #3498db; border-radius: 10px; margin: 5px;</string>
+                </property>
+                <layout class="QVBoxLayout" name="statCard1Layout">
+                 <item>
+                  <widget class="QLabel" name="statCard1Title">
+                   <property name="text">
+                    <string>Today's Steps</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-weight: bold; font-size: 14px;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="statCard1Value">
+                   <property name="text">
+                    <string>8,450</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-size: 28px; font-weight: bold;</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              
+              <item>
+               <widget class="QWidget" name="statCard2">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #27ae60; border-radius: 10px; margin: 5px;</string>
+                </property>
+                <layout class="QVBoxLayout" name="statCard2Layout">
+                 <item>
+                  <widget class="QLabel" name="statCard2Title">
+                   <property name="text">
+                    <string>Sleep Hours</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-weight: bold; font-size: 14px;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="statCard2Value">
+                   <property name="text">
+                    <string>7.5h</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-size: 28px; font-weight: bold;</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              
+              <item>
+               <widget class="QWidget" name="statCard3">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #e67e22; border-radius: 10px; margin: 5px;</string>
+                </property>
+                <layout class="QVBoxLayout" name="statCard3Layout">
+                 <item>
+                  <widget class="QLabel" name="statCard3Title">
+                   <property name="text">
+                    <string>Water Intake</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-weight: bold; font-size: 14px;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="statCard3Value">
+                   <property name="text">
+                    <string>2.1L</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-size: 28px; font-weight: bold;</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              
+              <item>
+               <widget class="QWidget" name="statCard4">
+                <property name="styleSheet">
+                 <string notr="true">background-color: #9b59b6; border-radius: 10px; margin: 5px;</string>
+                </property>
+                <layout class="QVBoxLayout" name="statCard4Layout">
+                 <item>
+                  <widget class="QLabel" name="statCard4Title">
+                   <property name="text">
+                    <string>Mood Score</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-weight: bold; font-size: 14px;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="statCard4Value">
+                   <property name="text">
+                    <string>8.2/10</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">color: white; font-size: 28px; font-weight: bold;</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           
+           <!-- Recent Activities -->
+           <item>
+            <widget class="QWidget" name="recentActivitiesWidget">
+             <layout class="QVBoxLayout" name="recentActivitiesLayout">
+              <item>
+               <widget class="QLabel" name="recentActivitiesTitle">
+                <property name="text">
+                 <string>Recent Activities</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">font-size: 18px; font-weight: bold; color: #2c3e50; margin: 10px;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QListWidget" name="recentActivitiesList">
+                <property name="styleSheet">
+                 <string notr="true">border: 1px solid #ddd; border-radius: 5px; margin: 5px;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         
+         <!-- Habits Page -->
+         <widget class="QWidget" name="habitsPage">
+          <layout class="QVBoxLayout" name="habitsLayout">
+           <item>
+            <widget class="QLabel" name="habitsPageTitle">
+             <property name="text">
+              <string>Habits Management</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           
+           <!-- Habits content will be added here -->
+           <item>
+            <widget class="QTabWidget" name="habitsTabWidget">
+             <widget class="QWidget" name="sleepTab">
+              <attribute name="title">
+               <string>Sleep</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="sleepLayout">
+               <item>
+                <widget class="QLabel" name="sleepLabel">
+                 <property name="text">
+                  <string>Sleep tracking and management</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             
+             <widget class="QWidget" name="exerciseTab">
+              <attribute name="title">
+               <string>Exercise</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="exerciseLayout">
+               <item>
+                <widget class="QLabel" name="exerciseLabel">
+                 <property name="text">
+                  <string>Exercise tracking and goals</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             
+             <widget class="QWidget" name="mealTab">
+              <attribute name="title">
+               <string>Meal Logs</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="mealLayout">
+               <item>
+                <widget class="QLabel" name="mealLabel">
+                 <property name="text">
+                  <string>Meal tracking and nutrition</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         
+         <!-- Health Conditions Page -->
+         <widget class="QWidget" name="healthConditionsPage">
+          <layout class="QVBoxLayout" name="healthConditionsLayout">
+           <item>
+            <widget class="QLabel" name="healthConditionsPageTitle">
+             <property name="text">
+              <string>Health Conditions Monitoring</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           
+           <item>
+            <widget class="QTabWidget" name="healthConditionsTabWidget">
+             <widget class="QWidget" name="bloodPressureTab">
+              <attribute name="title">
+               <string>Blood Pressure</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="bpLayout">
+               <item>
+                <widget class="QLabel" name="bpLabel">
+                 <property name="text">
+                  <string>Blood Pressure monitoring and history</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             
+             <widget class="QWidget" name="bloodSugarTab">
+              <attribute name="title">
+               <string>Blood Sugar</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="sugarLayout">
+               <item>
+                <widget class="QLabel" name="sugarLabel">
+                 <property name="text">
+                  <string>Blood Sugar level tracking</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             
+             <widget class="QWidget" name="stressTab">
+              <attribute name="title">
+               <string>Stress Level</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="stressLayout">
+               <item>
+                <widget class="QLabel" name="stressLabel">
+                 <property name="text">
+                  <string>Stress level monitoring and management</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         
+         <!-- Analytics Page -->
+         <widget class="QWidget" name="analyticsPage">
+          <layout class="QVBoxLayout" name="analyticsLayout">
+           <item>
+            <widget class="QLabel" name="analyticsPageTitle">
+             <property name="text">
+              <string>Health Analytics</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="analyticsContent">
+             <property name="text">
+              <string>Charts and graphs showing health trends and patterns</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         
+         <!-- AI Predictions Page -->
+         <widget class="QWidget" name="aiPredictionsPage">
+          <layout class="QVBoxLayout" name="aiPredictionsLayout">
+           <item>
+            <widget class="QLabel" name="aiPredictionsPageTitle">
+             <property name="text">
+              <string>AI Health Predictions</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="aiPredictionsContent">
+             <property name="text">
+              <string>AI-powered health predictions and recommendations</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         
+         <!-- Community Insights Page -->
+         <widget class="QWidget" name="communityPage">
+          <layout class="QVBoxLayout" name="communityLayout">
+           <item>
+            <widget class="QLabel" name="communityPageTitle">
+             <property name="text">
+              <string>Community Insights</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="communityContent">
+             <property name="text">
+              <string>Community health insights and comparisons</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         
+         <!-- Settings Page -->
+         <widget class="QWidget" name="settingsPage">
+          <layout class="QVBoxLayout" name="settingsLayout">
+           <item>
+            <widget class="QLabel" name="settingsPageTitle">
+             <property name="text">
+              <string>Settings</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size: 24px; font-weight: bold; color: #2c3e50; margin: 20px;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="settingsContent">
+             <property name="text">
+              <string>Application settings and preferences</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+</ui>

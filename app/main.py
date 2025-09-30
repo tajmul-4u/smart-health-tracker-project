@@ -1,9 +1,21 @@
 import sys
+import os
 from PyQt6.QtWidgets import QApplication
-import sys
-from app.controllers.login_controller import LoginController
-from app.controllers.dashboard_controller import DashboardController
-from app.services.api_client import APIClient
+
+# Add the project root to Python path
+project_root = os.path.join(os.path.dirname(__file__), '..')
+sys.path.insert(0, project_root)
+
+# Now we can import with the full path
+try:
+    from app.controllers.login_controller import LoginController
+    from app.controllers.enhanced_dashboard_controller import EnhancedDashboardController
+    from app.services.api_client import APIClient
+except ImportError:
+    # Fallback to simple relative imports
+    from controllers.login_controller import LoginController
+    from controllers.dashboard_controller import DashboardController as EnhancedDashboardController
+    from services.api_client import APIClient
 
 class SmartHealthTracker:
     def __init__(self):
@@ -27,7 +39,7 @@ class SmartHealthTracker:
             self.login_window.hide()
             
         # Show dashboard
-        self.dashboard = DashboardController(self.api_client)
+        self.dashboard = EnhancedDashboardController(self.api_client)
         self.dashboard.show()
 
 if __name__ == "__main__":
