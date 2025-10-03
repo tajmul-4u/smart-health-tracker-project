@@ -21,4 +21,4 @@ class User(Base):
 
     # Relationships
     habits = relationship("Habit", back_populates="user")
-    health_metrics = relationship("HealthMetric", back_populates="user")
+    health_data = relationship("HealthData", back_populates="user")

@@ -1,10 +1,12 @@
 from PyQt6.QtWidgets import (QMainWindow, QTableWidgetItem, QMessageBox, 
                              QProgressBar, QMenu, QListWidgetItem, QVBoxLayout, 
-                             QWidget, QLabel, QHBoxLayout)
+                             QWidget, QLabel, QHBoxLayout, QDialog, QPushButton)
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QFont
 from PyQt6 import uic
 from app.services.api_client import APIClient
+from app.widgets.health_data_widget import HealthDataInputWidget
+from app.widgets.user_profile_form import UserProfileFormWidget
 import os
 from datetime import datetime
 
@@ -62,7 +64,271 @@ class EnhancedDashboardController(QMainWindow):
         
     def setup_profile_section(self):
         """Setup profile dropdown and actions"""
-        self.profileDropdownButton.clicked.connect(self.show_profile_menu)
+        try:
+            # Connect dropdown button
+            self.profileDropdownButton.clicked.connect(self.show_profile_menu)
+            
+            # Make profile icon and name clickable
+            if hasattr(self, 'userAvatarLabel'):
+                self.userAvatarLabel.mousePressEvent = lambda event: self.show_profile_menu()
+                self.userAvatarLabel.setStyleSheet(
+                    self.userAvatarLabel.styleSheet() + 
+                    "; cursor: pointer; border-radius: 15px;"
+                )
+                self.userAvatarLabel.setToolTip("Click to access profile menu")
+                
+            if hasattr(self, 'userNameLabel'):
+                self.userNameLabel.mousePressEvent = lambda event: self.show_profile_menu()
+                self.userNameLabel.setStyleSheet(
+                    self.userNameLabel.styleSheet() + 
+                    "; cursor: pointer;"
+                )
+                self.userNameLabel.setToolTip("Click to access profile menu")
+                
+        except AttributeError:
+            # If UI elements don't exist, create profile functionality programmatically
+            pass
+            
+    def show_profile_menu(self):
+        """Show profile dropdown menu with profile form prioritized"""
+        menu = QMenu(self)
+        
+        # Profile Form Action (Primary)
+        profile_form_action = QAction("👤 Edit Profile", self)
+        profile_form_action.triggered.connect(self.show_profile_form)
+        profile_form_action.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+        menu.addAction(profile_form_action)
+        
+        menu.addSeparator()
+        
+        # Health Data Input Action
+        health_data_action = QAction("🏥 Health Data", self)
+        health_data_action.triggered.connect(self.show_health_data_input)
+        menu.addAction(health_data_action)
+        
+        # View Profile Info (Quick View)
+        view_profile_action = QAction("📋 View Profile Info", self)
+        view_profile_action.triggered.connect(self.show_profile_info)
+        menu.addAction(view_profile_action)
+        
+        menu.addSeparator()
+        
+        # Settings Action
+        settings_action = QAction("⚙️ Settings", self)
+        settings_action.triggered.connect(self.show_settings)
+        menu.addAction(settings_action)
+        
+        # Logout Action
+        logout_action = QAction("🚪 Logout", self)
+        logout_action.triggered.connect(self.logout)
+        menu.addAction(logout_action)
+        
+        # Show menu at button position
+        try:
+            menu.exec(self.profileDropdownButton.mapToGlobal(self.profileDropdownButton.rect().bottomLeft()))
+        except AttributeError:
+            menu.exec(self.mapToGlobal(self.rect().topRight()))
+            
+    def show_profile_form(self):
+        """Show comprehensive user profile form"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("👤 User Profile Management")
+        dialog.setModal(True)
+        dialog.resize(900, 700)
+        
+        # Create layout
+        layout = QVBoxLayout()
+        
+        # Add user profile form widget
+        profile_form = UserProfileFormWidget(self.api_client)
+        
+        # Connect signals
+        profile_form.profile_saved.connect(self.on_profile_saved)
+        profile_form.profile_updated.connect(self.on_profile_updated)
+        
+        layout.addWidget(profile_form)
+        
+        # Add close button
+        close_button = QPushButton("✅ Close")
+        close_button.clicked.connect(dialog.accept)
+        close_button.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: bold;
+                margin: 10px;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+        """)
+        layout.addWidget(close_button)
+        
+        dialog.setLayout(layout)
+        dialog.exec()
+        
+    def on_profile_saved(self, profile_data):
+        """Handle profile save events"""
+        try:
+            # Update the user name label if available
+            if hasattr(self, 'userNameLabel'):
+                self.userNameLabel.setText(profile_data.get('full_name', 'User'))
+                
+            # Update current user data
+            self.current_user = profile_data
+            
+            # Show success message
+            QMessageBox.information(
+                self,
+                "✅ Profile Saved",
+                f"Profile information saved successfully!\n\n"
+                f"Name: {profile_data.get('full_name', 'N/A')}\n"
+                f"Email: {profile_data.get('email', 'N/A')}\n"
+                f"Phone: {profile_data.get('phone', 'N/A')}"
+            )
+            
+            # Refresh dashboard data
+            self.load_dashboard_data()
+            
+        except Exception as e:
+            print(f"Error handling profile save: {e}")
+            
+    def on_profile_updated(self, profile_data):
+        """Handle profile update events"""
+        try:
+            # Update the user name label if available
+            if hasattr(self, 'userNameLabel'):
+                self.userNameLabel.setText(profile_data.get('full_name', 'User'))
+                
+            # Update current user data
+            if isinstance(profile_data, dict):
+                if not hasattr(self, 'current_user') or self.current_user is None:
+                    self.current_user = {}
+                self.current_user.update(profile_data)
+                
+            print(f"Profile updated: {profile_data.get('full_name', 'Unknown')}")
+            
+        except Exception as e:
+            print(f"Error handling profile update: {e}")
+            
+    def show_health_data_input(self):
+        """Show health data input dialog"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("🏥 Health Data Input - Profile Section")
+        dialog.setModal(True)
+        dialog.resize(800, 600)
+        
+        # Create layout
+        layout = QVBoxLayout()
+        
+        # Add health data widget
+        health_widget = HealthDataInputWidget(self.api_client)
+        
+        # Connect signals
+        health_widget.data_updated.connect(self.on_health_data_updated)
+        health_widget.user_profile_changed.connect(self.on_user_profile_changed)
+        
+        layout.addWidget(health_widget)
+        
+        # Add close button
+        close_button = QPushButton("✅ Done")
+        close_button.clicked.connect(dialog.accept)
+        close_button.setStyleSheet("""
+            QPushButton {
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: bold;
+                margin: 10px;
+            }
+            QPushButton:hover {
+                background-color: #218838;
+            }
+        """)
+        layout.addWidget(close_button)
+        
+        dialog.setLayout(layout)
+        dialog.exec()
+        
+    def show_profile_info(self):
+        """Show user profile information"""
+        try:
+            user_data = self.api_client.get_current_user() if self.api_client else self.current_user
+            
+            info_text = f"""
+👤 User Profile Information
+
+📧 Email: {user_data.get('email', 'Not set')}
+👤 Username: {user_data.get('username', 'Not set')} 
+📛 Full Name: {user_data.get('full_name', 'Not set')}
+🎂 Age: {user_data.get('age', 'Not set')} years
+⚥ Gender: {user_data.get('gender', 'Not set')}
+📏 Height: {user_data.get('height', 'Not set')} cm
+⚖️ Weight: {user_data.get('weight', 'Not set')} kg
+
+Click 'Update Health Data' to modify your health information.
+            """
+            
+            QMessageBox.information(self, "👤 Profile Information", info_text)
+            
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"Could not load profile: {str(e)}")
+            
+    def on_health_data_updated(self, health_summary):
+        """Handle health data updates from the widget"""
+        try:
+            # Update dashboard with new health data
+            self.refresh_dashboard()
+            
+            # Show confirmation
+            QMessageBox.information(
+                self,
+                "✅ Health Data Updated",
+                f"Your health data has been updated!\n\n"
+                f"Latest readings:\n"
+                f"• Blood Pressure: {health_summary.get('blood_pressure', 'N/A')}\n"
+                f"• Blood Sugar: {health_summary.get('blood_sugar', 'N/A')} mg/dL\n"
+                f"• Sleep: {health_summary.get('sleep_hours', 'N/A')} hours\n"
+                f"• Steps: {health_summary.get('steps', 'N/A')}\n"
+                f"• Mood: {health_summary.get('mood_score', 'N/A')}/10"
+            )
+            
+        except Exception as e:
+            print(f"Error updating dashboard: {e}")
+            
+    def on_user_profile_changed(self, profile_data):
+        """Handle user profile changes from the widget"""
+        try:
+            # Update current user data
+            if hasattr(self, 'current_user'):
+                self.current_user.update(profile_data)
+                
+            # Update UI if elements exist
+            if hasattr(self, 'userNameLabel'):
+                self.userNameLabel.setText(profile_data.get('full_name', 'User'))
+                
+        except Exception as e:
+            print(f"Error updating user profile: {e}")
+            
+    def show_settings(self):
+        """Show settings dialog"""
+        QMessageBox.information(
+            self,
+            "⚙️ Settings",
+            "Settings panel would be displayed here.\n\n"
+            "Available settings:\n"
+            "• Notification preferences\n"
+            "• Data export/import\n"
+            "• Privacy settings\n"
+            "• App preferences"
+        )
         
     def switch_page(self, page_index):
         """Switch between different pages in the stacked widget"""

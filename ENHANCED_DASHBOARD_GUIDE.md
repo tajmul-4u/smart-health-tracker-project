@@ -87,7 +87,7 @@ cd /home/tajmul/Projects/Python/health-recomand/smart_health_tracker
 
 ```bash
 cd /home/tajmul/Projects/Python/health-recomand/smart_health_tracker/backend_api
-/home/tajmul/Projects/Python/health-recomand/.venv/bin/python main_simple.py
+/home/tajmul/Projects/Python/health-recomand/.venv/bin/python main_enhanced.py
 ```
 
 **Start Frontend (in new terminal):**

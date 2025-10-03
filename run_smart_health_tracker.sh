@@ -11,11 +11,11 @@ NC='\033[0m' # No Color
 
 # Get the project directory
 PROJECT_DIR="/home/tajmul/Projects/Python/health-recomand/smart_health_tracker"
-VENV_PYTHON="/home/tajmul/Projects/Python/health-recomand/.venv/bin/python"
+VENV_PYTHON="/home/tajmul/Projects/Python/health-recomand/smart_health_tracker/venv/bin/python"
 
-echo -e "${BLUE}Starting Backend API Server...${NC}"
+echo -e "${BLUE}Starting Enhanced Backend API Server...${NC}"
 cd "$PROJECT_DIR/backend_api"
-$VENV_PYTHON main_simple.py &
+$VENV_PYTHON main_enhanced.py &
 BACKEND_PID=$!
 
 echo -e "${GREEN}Backend started with PID: $BACKEND_PID${NC}"

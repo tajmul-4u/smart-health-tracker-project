@@ -22,4 +22,3 @@ class Habit(Base):
 
     # Relationships
     user = relationship("User", back_populates="habits")
-    tracking_records = relationship("HabitTracking", back_populates="habit")
