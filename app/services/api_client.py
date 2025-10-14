@@ -224,3 +224,33 @@ class APIClient:
         )
         response.raise_for_status()
         return response.json()
+
+    # Generic HTTP methods
+    def get(self, endpoint: str) -> Optional[Dict]:
+        """Generic GET request"""
+        try:
+            response = requests.get(
+                f"{self.base_url}{endpoint}",
+                headers=self._get_headers(),
+                timeout=5
+            )
+            if response.status_code == 200:
+                return response.json()
+        except Exception:
+            pass
+        return None
+
+    def post(self, endpoint: str, data: Dict) -> Optional[Dict]:
+        """Generic POST request"""
+        try:
+            response = requests.post(
+                f"{self.base_url}{endpoint}",
+                headers=self._get_headers(),
+                json=data,
+                timeout=5
+            )
+            if response.status_code in [200, 201]:
+                return response.json()
+        except Exception:
+            pass
+        return None

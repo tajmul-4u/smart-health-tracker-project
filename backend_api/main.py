@@ -9,12 +9,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 try:
-    from routes import user_routes, habit_routes
+    from routes import user_routes, habit_routes, health_data_routes
 except ImportError:
     # Fallback for different import structures
     from . import routes
     user_routes = routes.user_routes
     habit_routes = routes.habit_routes
+    health_data_routes = routes.health_data_routes
 import uvicorn
 
 app = FastAPI(
@@ -26,7 +27,7 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
+    allow_origins=os.getenv("CORS_ORIGINS", "*").split(","),  # In production, set specific origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,6 +36,7 @@ app.add_middleware(
 # Include routers
 app.include_router(user_routes.router, prefix="/api/users", tags=["users"])
 app.include_router(habit_routes.router, prefix="/api/habits", tags=["habits"])
+app.include_router(health_data_routes.router, prefix="/api/health-data", tags=["health-data"])
 
 @app.get("/")
 async def root():

@@ -6,15 +6,39 @@ echo "=== Smart Health Tracker ==="
 echo "Starting the application..."
 echo
 
-# Check if virtual environment exists
-if [ ! -d "/home/tajmul/Projects/Python/health-recomand/.venv" ]; then
-    echo "Error: Virtual environment not found!"
+# Function to find Python executable
+find_python() {
+    # Check virtual environment first
+    if [ -d "/home/tajmul/Projects/Python/health-recomand/.venv" ]; then
+        echo "/home/tajmul/Projects/Python/health-recomand/.venv/bin/python"
+    elif [ -d "venv" ]; then
+        echo "venv/bin/python"
+    elif command -v python3 &> /dev/null; then
+        echo "python3"
+    elif command -v python &> /dev/null; then
+        echo "python"
+    else
+        echo ""
+    fi
+}
+
+# Get Python command
+PYTHON_CMD=$(find_python)
+if [ -z "$PYTHON_CMD" ]; then
+    echo "Error: Python not found! Please install Python or set up virtual environment."
     exit 1
 fi
 
+echo "Using Python: $PYTHON_CMD"
+
 # Set Python path
 export PYTHONPATH="/home/tajmul/Projects/Python/health-recomand/smart_health_tracker"
-PYTHON_CMD="/home/tajmul/Projects/Python/health-recomand/.venv/bin/python"
+
+# Check if requirements are installed
+echo "Checking dependencies..."
+if ! $PYTHON_CMD -c "import fastapi, PyQt6" &> /dev/null; then
+    echo "Warning: Some dependencies might be missing. Install with: pip install -r requirements.txt"
+fi
 
 # Start backend in background
 echo "1. Starting Backend API Server..."

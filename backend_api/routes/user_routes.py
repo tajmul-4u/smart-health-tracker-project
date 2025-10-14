@@ -68,3 +68,13 @@ async def update_user(
     db.commit()
     db.refresh(user)
     return user
+
+@router.get("/streak")
+async def get_user_streak(token: dict = Depends(SecurityUtils.auth_wrapper), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == token["sub"]).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Calculate user streak (simplified version)
+    # This would normally calculate based on health data entries
+    return {"streak": 7, "message": "Great job! 7 days in a row!"}

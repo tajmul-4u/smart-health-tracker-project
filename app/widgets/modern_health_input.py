@@ -20,7 +20,24 @@ from PyQt6.QtGui import (
     QFont, QPalette, QColor, QLinearGradient, QPainter, QBrush,
     QPixmap, QIcon, QPen, QFontMetrics
 )
-from PyQt6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
+
+# Optional charts import - graceful fallback if not available
+try:
+    from PyQt6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
+    CHARTS_AVAILABLE = True
+except ImportError:
+    print("📊 PyQt6.QtCharts not available - chart features will be disabled")
+    CHARTS_AVAILABLE = False
+    # Create dummy classes to prevent errors
+    class QChart:
+        def __init__(self): pass
+    class QChartView(QWidget):
+        def __init__(self): super().__init__()
+    class QLineSeries:
+        def __init__(self): pass
+    class QValueAxis:
+        def __init__(self): pass
+
 import requests
 from datetime import datetime, date, timedelta
 import json
@@ -34,6 +51,9 @@ class ModernCard(QFrame):
         self.setFrameStyle(QFrame.Shape.Box)
         self.setLineWidth(0)
         self.init_styling()
+        
+        self.main_layout = QVBoxLayout()
+        self.setLayout(self.main_layout)
         
         if title:
             self.add_header(title, icon)
@@ -66,8 +86,6 @@ class ModernCard(QFrame):
         
     def add_header(self, title, icon=""):
         """Add header to card"""
-        layout = QVBoxLayout()
-        
         header_layout = QHBoxLayout()
         
         if icon:
@@ -81,10 +99,11 @@ class ModernCard(QFrame):
         header_layout.addWidget(title_label)
         header_layout.addStretch()
         
-        layout.addLayout(header_layout)
-        self.setLayout(layout)
+        self.main_layout.addLayout(header_layout)
         
-        return layout
+    def layout(self):
+        """Get the main layout for adding widgets"""
+        return self.main_layout
 
 class SmartSlider(QWidget):
     """Smart slider with visual feedback and validation"""
@@ -203,7 +222,8 @@ class QuickInputCard(ModernCard):
         
     def init_quick_input(self, min_val, max_val, current_val):
         """Initialize quick input interface"""
-        layout = QVBoxLayout()
+        # Get the main layout from the parent ModernCard
+        layout = self.layout()
         
         # Header
         header_layout = QHBoxLayout()
@@ -273,8 +293,6 @@ class QuickInputCard(ModernCard):
                 """)
                 presets_layout.addWidget(btn)
             layout.addLayout(presets_layout)
-            
-        self.setLayout(layout)
 
 class ModernHealthDataInput(QWidget):
     """Modern health data input system with enhanced UX"""
@@ -810,7 +828,7 @@ class ModernHealthDataInput(QWidget):
         layout = QVBoxLayout()
         
         # Placeholder for charts - would integrate with QtCharts
-        chart_placeholder = QLabel("📈 Health Trends & History\n\n"
+        chart_placeholder = QLabel("� Health Trends & History\n\n"
                                  "• Interactive charts showing your health data over time\n"
                                  "• Weekly and monthly summaries\n"
                                  "• Pattern recognition and insights\n"
@@ -833,6 +851,7 @@ class ModernHealthDataInput(QWidget):
         
         widget.setLayout(layout)
         return widget
+        
         
     def create_settings_tab(self):
         """Create settings and preferences"""
@@ -1173,7 +1192,7 @@ class ModernHealthDataInput(QWidget):
         """Submit data to API"""
         try:
             if self.api_client:
-                response = self.api_client.post("/api/health-data", json=data)
+                response = self.api_client.post("/api/health-data", data)
             else:
                 # Fallback to direct requests
                 response = requests.post(f"{self.api_base_url}/api/health-data", 

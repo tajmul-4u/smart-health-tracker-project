@@ -303,3 +303,32 @@ async def get_chart_data(
         mood_score=mood_score,
         energy_level=energy_level
     )
+
+@router.get("/recent")
+async def get_recent_health_data(db: Session = Depends(get_db)):
+    """Get recent health data for dashboard display"""
+    user_id = get_current_user_id()
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Get last 5 health data entries
+    recent_data = db.query(HealthData).filter(
+        HealthData.user_id == user_id
+    ).order_by(desc(HealthData.measurement_time)).limit(5).all()
+    
+    if not recent_data:
+        return {"message": "No health data found", "data": []}
+    
+    # Format for dashboard display
+    formatted_data = []
+    for data in recent_data:
+        formatted_data.append({
+            "date": data.measurement_time.strftime("%Y-%m-%d") if data.measurement_time else "",
+            "blood_pressure": f"{data.systolic_bp}/{data.diastolic_bp}" if data.systolic_bp and data.diastolic_bp else "N/A",
+            "heart_rate": data.heart_rate or "N/A",
+            "weight": data.weight or "N/A",
+            "blood_sugar": data.blood_sugar or "N/A",
+            "notes": data.notes or ""
+        })
+    
+    return {"data": formatted_data}
