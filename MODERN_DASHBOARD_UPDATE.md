@@ -322,6 +322,15 @@ Insights include:
 │  [Deep breathing]   [Drink water]    [Eat vegetables]      │
 │  💎 Pro Tip: Consistency beats perfection!                  │
 └─────────────────────────────────────────────────────────────┘
+
+### 🔁 Sidebar Toggle & Responsive Behavior
+
+- **Menu Button (☰)**: A hamburger menu button has been added to the top-left of the top bar. Clicking it will show or hide the left navigation sidebar.
+- **Auto-hide on Narrow Screens**: The dashboard automatically hides the sidebar when the window width drops below 900px, improving usability on small screens.
+- **Layout Adjustment**: Toggling the sidebar updates the central layout so the content area reflows to use the available space.
+- **How to Use**: Click the ☰ button to toggle the sidebar. Resize the window to see the sidebar auto-hide on narrow widths.
+
+This small change improves mobile usability and helps users focus on main content when needed.
 ```
 
 ### 🎊 Summary

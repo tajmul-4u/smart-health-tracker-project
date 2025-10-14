@@ -9,12 +9,12 @@ sys.path.insert(0, project_root)
 # Now we can import with the full path
 try:
     from app.controllers.login_controller import LoginController
-    from app.controllers.enhanced_dashboard_controller import EnhancedDashboardController
+    from app.controllers.working_dashboard_controller import WorkingDashboardController
     from app.services.api_client import APIClient
 except ImportError:
     # Fallback to simple relative imports
     from controllers.login_controller import LoginController
-    from controllers.dashboard_controller import DashboardController as EnhancedDashboardController
+    from controllers.working_dashboard_controller import WorkingDashboardController
     from services.api_client import APIClient
 
 class SmartHealthTracker:
@@ -38,8 +38,8 @@ class SmartHealthTracker:
         if self.login_window:
             self.login_window.hide()
             
-        # Show dashboard
-        self.dashboard = EnhancedDashboardController(self.api_client)
+        # Show modern dashboard
+        self.dashboard = WorkingDashboardController(self.api_client)
         self.dashboard.show()
 
 if __name__ == "__main__":

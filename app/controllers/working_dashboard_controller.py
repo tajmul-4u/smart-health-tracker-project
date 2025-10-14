@@ -57,9 +57,9 @@ class WorkingDashboardController(QMainWindow):
         main_layout = QHBoxLayout()
         central_widget.setLayout(main_layout)
         
-        # Left navigation panel
-        nav_panel = self.create_navigation_panel()
-        main_layout.addWidget(nav_panel)
+        # Left navigation panel (keep a reference for toggling)
+        self.nav_widget = self.create_navigation_panel()
+        main_layout.addWidget(self.nav_widget)
         
         # Right content area
         content_area = self.create_content_area()
@@ -228,6 +228,24 @@ class WorkingDashboardController(QMainWindow):
         layout = QHBoxLayout()
         top_bar.setLayout(layout)
         
+        # Menu button (hamburger) for toggling sidebar - left aligned
+        self.menuButton = QPushButton("☰")
+        self.menuButton.setFixedSize(36, 36)
+        self.menuButton.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+                color: #2c3e50;
+                border: none;
+                font-size: 18px;
+            }
+            QPushButton:hover {
+                background-color: #ecf0f1;
+                border-radius: 6px;
+            }
+        """)
+        self.menuButton.clicked.connect(self.toggle_sidebar)
+        layout.addWidget(self.menuButton)
+
         # Page title
         self.page_title = QLabel("📊 Dashboard Overview")
         self.page_title.setFont(QFont("Arial", 18, QFont.Weight.Bold))
@@ -1518,6 +1536,35 @@ class WorkingDashboardController(QMainWindow):
         if reply == QMessageBox.StandardButton.Yes:
             QMessageBox.information(self, "✅ Logout", "Logged out successfully!")
             self.close()
+
+    def toggle_sidebar(self):
+        """Show/hide the left navigation sidebar"""
+        try:
+            if self.nav_widget.isVisible():
+                self.nav_widget.hide()
+            else:
+                self.nav_widget.show()
+        except Exception:
+            # Defensive: if nav_widget not set, ignore
+            pass
+
+    def resizeEvent(self, a0):
+        """Auto-hide sidebar when window is narrow to improve responsiveness"""
+        try:
+            width = self.width()
+            # Hide sidebar on narrow widths (e.g., mobile-like)
+            if width < 900:
+                if self.nav_widget.isVisible():
+                    self.nav_widget.hide()
+            else:
+                # Show sidebar for wider screens
+                if not self.nav_widget.isVisible():
+                    self.nav_widget.show()
+        except Exception:
+            pass
+        # Call base class implementation
+        return super().resizeEvent(a0)
+
 
 
 def main():
